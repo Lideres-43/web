@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Estadísticas de Redes Sociales</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: #f2f2f2; margin: 0; padding: 0; }
+    .container { max-width: 900px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #333; margin-bottom: 30px; }
+    canvas { margin-top: 30px; }
+    .chart-container { margin-bottom: 50px; }
+    .link { text-align: center; margin-top: 20px; }
+    .link a { color: #4CAF50; text-decoration: none; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Resultados de la Encuesta</h1>
+
+    <div class="chart-container"><canvas id="favoriteAppChart"></canvas></div>
+    <div class="chart-container"><canvas id="hoursChart"></canvas></div>
+    <div class="chart-container"><canvas id="contentChart"></canvas></div>
+    <div class="chart-container"><canvas id="newsChart"></canvas></div>
+    <div class="chart-container"><canvas id="preferenceChart"></canvas></div>
+    <div class="chart-container"><canvas id="messagingChart"></canvas></div>
+    <div class="chart-container"><canvas id="appsInstalledChart"></canvas></div>
+    <div class="chart-container"><canvas id="addictiveAppChart"></canvas></div>
+    <div class="chart-container"><canvas id="publishChart"></canvas></div>
+    <div class="chart-container"><canvas id="importanceChart"></canvas></div>
+
+    <div class="link">
+      <a href="formulario.html">Volver a encuesta</a>
+    </div>
+  </div>
+
+  <script>
+    const surveys = JSON.parse(localStorage.getItem('surveys')) || [];
+
+    const questions = ['favoriteApp', 'hours', 'content', 'news', 'preference', 'messaging', 'appsInstalled', 'addictive', 'publish', 'importance'];
+
+    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#8BC34A', '#FF9800', '#BA68C8', '#4DD0E1', '#F06292', '#9575CD', '#4DB6AC'];
+
+    function countAnswers(key) {
+      const counts = {};
+      surveys.forEach(entry => {
+        const answer = entry[key];
+        if (answer) counts[answer] = (counts[answer] || 0) + 1;
+      });
+      return counts;
+    }
+
+    function createPieChart(id, title, data) {
+      const total = Object.values(data).reduce((sum, value) => sum + value, 0);
+      new Chart(document.getElementById(id).getContext('2d'), {
+        type: 'pie',
+        data: {
+          labels: Object.keys(data).map(option => `${option} (${data[option]} votos)`),
+          datasets: [{
+            data: Object.values(data),
+            backgroundColor: colors,
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: { display: true, text: title },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  let label = context.label || '';
+                  let value = context.raw;
+                  let percentage = ((value / total) * 100).toFixed(1);
+                  return `${label}: ${value} votos (${percentage}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    createPieChart('favoriteAppChart', '¿Cuál red social usas más?', countAnswers('favoriteApp'));
+    createPieChart('hoursChart', '¿Cuántas horas al día usas redes sociales?', countAnswers('hours'));
+    createPieChart('contentChart', '¿Qué tipo de contenido prefieres?', countAnswers('content'));
+    createPieChart('newsChart', '¿Usas redes para informarte de noticias?', countAnswers('news'));
+    createPieChart('preferenceChart', '¿Prefieres chatear o ver publicaciones?', countAnswers('preference'));
+    createPieChart('messagingChart', '¿Qué app de mensajería usas más?', countAnswers('messaging'));
+    createPieChart('appsInstalledChart', '¿Cuántas redes sociales tienes instaladas?', countAnswers('appsInstalled'));
+    createPieChart('addictiveAppChart', '¿Cuál consideras más adictiva?', countAnswers('addictive'));
+    createPieChart('publishChart', '¿Publicas contenido propio?', countAnswers('publish'));
+    createPieChart('importanceChart', '¿Qué tan importantes son para ti las redes sociales?', countAnswers('importance'));
+  </script>
+</body>
+</html>

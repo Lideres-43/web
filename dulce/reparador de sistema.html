@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Encuesta de Redes Sociales</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: #f2f2f2; margin: 0; padding: 0; }
+    .container { max-width: 600px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #333; }
+    form p { margin-bottom: 15px; color: #555; }
+    select, button { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px; }
+    button { background-color: #4CAF50; color: white; border: none; cursor: pointer; margin-top: 20px; font-size: 16px; }
+    button:hover { background-color: #45a049; }
+    .link { text-align: center; margin-top: 20px; }
+    .link a { color: #4CAF50; text-decoration: none; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Encuesta de Redes Sociales</h1>
+    <form id="surveyForm">
+      <p>1. ¿Cuál red social usas más?
+        <select name="favoriteApp">
+          <option>Facebook</option>
+          <option>Instagram</option>
+          <option>WhatsApp</option>
+          <option>TikTok</option>
+          <option>Twitter/X</option>
+        </select>
+      </p>
+      <p>2. ¿Cuántas horas al día usas redes sociales?
+        <select name="hours">
+          <option>Menos de 1 hora</option>
+          <option>1-2 horas</option>
+          <option>3-4 horas</option>
+          <option>Más de 4 horas</option>
+        </select>
+      </p>
+      <p>3. ¿Qué tipo de contenido prefieres?
+        <select name="content">
+          <option>Videos</option>
+          <option>Fotos</option>
+          <option>Texto</option>
+          <option>Noticias</option>
+        </select>
+      </p>
+      <p>4. ¿Usas redes para informarte de noticias?
+        <select name="news">
+          <option>Sí</option>
+          <option>No</option>
+        </select>
+      </p>
+      <p>5. ¿Prefieres chatear o ver publicaciones?
+        <select name="preference">
+          <option>Chatear</option>
+          <option>Ver publicaciones</option>
+        </select>
+      </p>
+      <p>6. ¿Qué app de mensajería usas más?
+        <select name="messaging">
+          <option>WhatsApp</option>
+          <option>Messenger</option>
+          <option>Telegram</option>
+          <option>Otro</option>
+        </select>
+      </p>
+      <p>7. ¿Cuántas redes sociales tienes instaladas?
+        <select name="appsInstalled">
+          <option>1-2</option>
+          <option>3-4</option>
+          <option>5 o más</option>
+        </select>
+      </p>
+      <p>8. ¿Cuál consideras más adictiva?
+        <select name="addictive">
+          <option>Facebook</option>
+          <option>Instagram</option>
+          <option>TikTok</option>
+          <option>Otra</option>
+        </select>
+      </p>
+      <p>9. ¿Publicas contenido propio?
+        <select name="publish">
+          <option>Sí, seguido</option>
+          <option>Algunas veces</option>
+          <option>Muy rara vez</option>
+          <option>Nunca</option>
+        </select>
+      </p>
+      <p>10. ¿Qué tan importante son para ti las redes sociales?
+        <select name="importance">
+          <option>Muy importantes</option>
+          <option>Importantes</option>
+          <option>Poco importantes</option>
+          <option>Innecesarias</option>
+        </select>
+      </p>
+      <button type="submit">Enviar encuesta</button>
+    </form>
+    <div class="link">
+      <a href="estadisticas.html">Ver estadísticas</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('surveyForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const newEntry = {};
+
+      formData.forEach((value, key) => {
+        newEntry[key] = value;
+      });
+
+      let surveys = JSON.parse(localStorage.getItem('surveys')) || [];
+      surveys.push(newEntry);
+      localStorage.setItem('surveys', JSON.stringify(surveys));
+
+      alert('¡Gracias por completar la encuesta!');
+      e.target.reset();
+    });
+  </script>
+</body>
+</html>
+
